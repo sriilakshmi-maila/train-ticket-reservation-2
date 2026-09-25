@@ -15,6 +15,7 @@ jobs:
       ECR_REPOSITORY: demo-repo
       ECS_CLUSTER: demo-cluster
       AWS_REGION: us-east-1
+      IMAGE_TAG: latest
       
     steps:
 
@@ -49,22 +50,10 @@ jobs:
       - name: Tag Docker Image
         run: |
          docker tag $ECR_REPOSITORY:latest \
-           ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$ECR_REPOSITORY:latest
+           ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/$ECR_REPOSITORY:latest
 
       - name: Push Docker Image
         run: |
          docker push \
-           ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$ECR_REPOSITORY:latest
-      - name: Update ECS Task Definition
-        run: |
-          ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-          sed -i "s|<IMAGE>|$ACCOUNT_ID.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}|g" task-definition.json
-          cat task-definition.json > new-task.json
-
-      - name: Deploy to Amazon ECS
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
-        with:
-          task-definition: new-task.json
-          service: ${{ secrets.ECS_SERVICE }}
-          cluster: ${{ secrets.ECS_CLUSTER }}
-          wait-for-service-stability: true
+           ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/$ECR_REPOSITORY:latest
+     
