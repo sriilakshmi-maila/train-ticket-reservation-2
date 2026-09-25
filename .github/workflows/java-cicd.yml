@@ -15,7 +15,7 @@ jobs:
       ECR_REPOSITORY: demo-repo
       ECS_CLUSTER: demo-cluster
       ECS_REGION: us-east-1
-      ECS_SERVICE: demo-service
+      
 
     steps:
 
