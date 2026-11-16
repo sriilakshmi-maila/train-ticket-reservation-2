@@ -1,0 +1,13 @@
+
+# Local Linux user and machine files
+.bash_history
+.bashrc
+.profile
+.cache/
+.ssh/
+
+# Local Maven credentials/configuration
+settings.xml
+
+# Unwanted database documentation
+Dummy-Database.md
