@@ -13,6 +13,7 @@ jobs:
 
     env:
       ECR_REPOSITORY: demo-repo
+      AWS_REGION: us-east-1
       
     steps:
 
