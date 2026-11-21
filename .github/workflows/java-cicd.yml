@@ -14,6 +14,11 @@ jobs:
     env:
       ECR_REPOSITORY: demo_repo
       AWS_REGION: us-east-1
+      ECS_CLUSTER: demo-cluster
+      ECS_SERVICE: advanced-server-z5900y-service-vmx28bet
+      IMAGE_TAG: latest
+      
+      
       
     steps:
 
@@ -54,3 +59,16 @@ jobs:
         run: |
          docker push \
            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/demo_repo:latest
+      - name: Update ECS Task Definition
+        run: |
+          ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+          sed -i "s|<IMAGE>|$ACCOUNT_ID.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}|g" task-Definition.json
+          cat task-Definition.json > new-task.json
+
+      - name: Deploy to Amazon ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: new-task.json
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
