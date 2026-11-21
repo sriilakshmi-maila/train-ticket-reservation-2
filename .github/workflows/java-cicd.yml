@@ -43,14 +43,14 @@ jobs:
 
       - name: Build Docker Image
         run: |
-         docker build -t $ECR_REPOSITORY:latest .
+         docker build -t demo-repo:latest .
 
       - name: Tag Docker Image
         run: |
-         docker tag $demo-repo:latest \
-           ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/$demo-repo:latest
+         docker tag demo-repo:latest \
+           ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/demo-repo:latest
 
       - name: Push Docker Image
         run: |
          docker push \
-           ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/$demo-repo:latest
+           ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/demo-repo:latest
